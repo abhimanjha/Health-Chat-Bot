@@ -10,6 +10,7 @@ import {
   Pressable,
   ScrollView,
   KeyboardAvoidingView,
+  useWindowDimensions,
 } from "react-native";
 import { router } from "expo-router";
 import { useColors } from "@/hooks/useColors";
@@ -20,6 +21,7 @@ import { Feather } from "@expo/vector-icons";
 export default function SignUpScreen() {
   const colors = useColors();
   const insets = useSafeAreaInsets();
+  const { height: screenHeight } = useWindowDimensions();
   const { signUp } = useAuth();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -64,12 +66,12 @@ export default function SignUpScreen() {
       <ScrollView
         style={{ flex: 1 }}
         contentContainerStyle={{
-          flexGrow: 1,
+          minHeight: screenHeight,
           justifyContent: "center",
           alignItems: "stretch",
           paddingHorizontal: 24,
-          paddingTop: isWeb ? 67 : insets.top + 16,
-          paddingBottom: isWeb ? 67 : insets.bottom + 16,
+          paddingTop: insets.top + 16,
+          paddingBottom: insets.bottom + 16,
         }}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
