@@ -8,8 +8,8 @@ import {
   Platform,
   ActivityIndicator,
   Pressable,
-  KeyboardAvoidingView,
   ScrollView,
+  KeyboardAvoidingView,
 } from "react-native";
 import { router } from "expo-router";
 import { useColors } from "@/hooks/useColors";
@@ -29,7 +29,7 @@ export default function SignUpScreen() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const styles = makeStyles(colors, insets);
+  const isWeb = Platform.OS === "web";
 
   async function handleSignUp() {
     if (!name.trim() || !email.trim() || !password.trim() || !confirm.trim()) {
@@ -58,53 +58,76 @@ export default function SignUpScreen() {
 
   return (
     <KeyboardAvoidingView
-      style={[styles.root, { backgroundColor: colors.background }]}
+      style={{ flex: 1, backgroundColor: colors.background }}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
       <ScrollView
-        contentContainerStyle={styles.scroll}
+        style={{ flex: 1 }}
+        contentContainerStyle={{
+          flexGrow: 1,
+          justifyContent: "center",
+          alignItems: "stretch",
+          paddingHorizontal: 24,
+          paddingTop: isWeb ? 67 : insets.top + 16,
+          paddingBottom: isWeb ? 67 : insets.bottom + 16,
+        }}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
       >
+        {/* Logo + Branding */}
         <View style={styles.header}>
-          <View style={styles.logoContainer}>
+          <View style={[styles.logoContainer, { backgroundColor: colors.primary, shadowColor: colors.primary }]}>
             <Feather name="activity" size={36} color={colors.primaryForeground} />
           </View>
-          <Text style={styles.appName}>HealthAI</Text>
-          <Text style={styles.tagline}>Start your wellness journey today</Text>
+          <Text style={[styles.appName, { color: colors.foreground }]}>HealthAI</Text>
+          <Text style={[styles.tagline, { color: colors.mutedForeground }]}>Start your wellness journey today</Text>
         </View>
 
-        <View style={styles.card}>
-          <Text style={styles.title}>Create account</Text>
-          <Text style={styles.subtitle}>Join thousands prioritizing their health</Text>
+        {/* Card */}
+        <View style={[styles.card, { backgroundColor: colors.card }]}>
+          <Text style={[styles.title, { color: colors.foreground }]}>Create account</Text>
+          <Text style={[styles.subtitle, { color: colors.mutedForeground }]}>Join thousands prioritizing their health</Text>
 
-          {[
-            { label: "Full Name", icon: "user" as const, value: name, onChange: setName, placeholder: "Your name", type: "default" as const },
-            { label: "Email", icon: "mail" as const, value: email, onChange: setEmail, placeholder: "you@example.com", type: "email-address" as const },
-          ].map((field) => (
-            <View key={field.label} style={styles.inputGroup}>
-              <Text style={styles.label}>{field.label}</Text>
-              <View style={styles.inputWrapper}>
-                <Feather name={field.icon} size={18} color={colors.mutedForeground} style={styles.inputIcon} />
-                <TextInput
-                  style={styles.input}
-                  placeholder={field.placeholder}
-                  placeholderTextColor={colors.mutedForeground}
-                  value={field.value}
-                  onChangeText={field.onChange}
-                  autoCapitalize={field.type === "email-address" ? "none" : "words"}
-                  keyboardType={field.type}
-                />
-              </View>
-            </View>
-          ))}
-
+          {/* Name */}
           <View style={styles.inputGroup}>
-            <Text style={styles.label}>Password</Text>
-            <View style={styles.inputWrapper}>
+            <Text style={[styles.label, { color: colors.foreground }]}>Full Name</Text>
+            <View style={[styles.inputWrapper, { backgroundColor: colors.muted, borderColor: colors.border }]}>
+              <Feather name="user" size={18} color={colors.mutedForeground} style={styles.inputIcon} />
+              <TextInput
+                style={[styles.input, { color: colors.foreground }]}
+                placeholder="Your name"
+                placeholderTextColor={colors.mutedForeground}
+                value={name}
+                onChangeText={setName}
+                autoCapitalize="words"
+              />
+            </View>
+          </View>
+
+          {/* Email */}
+          <View style={styles.inputGroup}>
+            <Text style={[styles.label, { color: colors.foreground }]}>Email</Text>
+            <View style={[styles.inputWrapper, { backgroundColor: colors.muted, borderColor: colors.border }]}>
+              <Feather name="mail" size={18} color={colors.mutedForeground} style={styles.inputIcon} />
+              <TextInput
+                style={[styles.input, { color: colors.foreground }]}
+                placeholder="you@example.com"
+                placeholderTextColor={colors.mutedForeground}
+                value={email}
+                onChangeText={setEmail}
+                autoCapitalize="none"
+                keyboardType="email-address"
+              />
+            </View>
+          </View>
+
+          {/* Password */}
+          <View style={styles.inputGroup}>
+            <Text style={[styles.label, { color: colors.foreground }]}>Password</Text>
+            <View style={[styles.inputWrapper, { backgroundColor: colors.muted, borderColor: colors.border }]}>
               <Feather name="lock" size={18} color={colors.mutedForeground} style={styles.inputIcon} />
               <TextInput
-                style={[styles.input, styles.inputPaddingRight]}
+                style={[styles.input, { color: colors.foreground, paddingRight: 8 }]}
                 placeholder="Min. 6 characters"
                 placeholderTextColor={colors.mutedForeground}
                 value={password}
@@ -117,12 +140,13 @@ export default function SignUpScreen() {
             </View>
           </View>
 
+          {/* Confirm */}
           <View style={styles.inputGroup}>
-            <Text style={styles.label}>Confirm Password</Text>
-            <View style={styles.inputWrapper}>
+            <Text style={[styles.label, { color: colors.foreground }]}>Confirm Password</Text>
+            <View style={[styles.inputWrapper, { backgroundColor: colors.muted, borderColor: colors.border }]}>
               <Feather name="shield" size={18} color={colors.mutedForeground} style={styles.inputIcon} />
               <TextInput
-                style={styles.input}
+                style={[styles.input, { color: colors.foreground }]}
                 placeholder="Repeat your password"
                 placeholderTextColor={colors.mutedForeground}
                 value={confirm}
@@ -132,15 +156,17 @@ export default function SignUpScreen() {
             </View>
           </View>
 
+          {/* Error */}
           {error ? (
-            <View style={styles.errorBox}>
+            <View style={[styles.errorBox, { backgroundColor: colors.destructive + "15" }]}>
               <Feather name="alert-circle" size={14} color={colors.destructive} />
-              <Text style={styles.errorText}>{error}</Text>
+              <Text style={[styles.errorText, { color: colors.destructive }]}>{error}</Text>
             </View>
           ) : null}
 
+          {/* Create Account Button */}
           <TouchableOpacity
-            style={[styles.btn, loading && styles.btnDisabled]}
+            style={[styles.btn, { backgroundColor: colors.primary, shadowColor: colors.primary }, loading && styles.btnDisabled]}
             onPress={handleSignUp}
             disabled={loading}
             activeOpacity={0.85}
@@ -148,22 +174,24 @@ export default function SignUpScreen() {
             {loading ? (
               <ActivityIndicator color={colors.primaryForeground} />
             ) : (
-              <Text style={styles.btnText}>Create Account</Text>
+              <Text style={[styles.btnText, { color: colors.primaryForeground }]}>Create Account</Text>
             )}
           </TouchableOpacity>
 
+          {/* Divider */}
           <View style={styles.divider}>
-            <View style={styles.dividerLine} />
-            <Text style={styles.dividerText}>or</Text>
-            <View style={styles.dividerLine} />
+            <View style={[styles.dividerLine, { backgroundColor: colors.border }]} />
+            <Text style={[styles.dividerText, { color: colors.mutedForeground }]}>or</Text>
+            <View style={[styles.dividerLine, { backgroundColor: colors.border }]} />
           </View>
 
+          {/* Sign In */}
           <TouchableOpacity
-            style={styles.secondaryBtn}
+            style={[styles.secondaryBtn, { borderColor: colors.primary }]}
             onPress={() => router.push("/sign-in")}
             activeOpacity={0.8}
           >
-            <Text style={styles.secondaryBtnText}>Sign in instead</Text>
+            <Text style={[styles.secondaryBtnText, { color: colors.primary }]}>Sign in instead</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -171,150 +199,77 @@ export default function SignUpScreen() {
   );
 }
 
-function makeStyles(colors: ReturnType<typeof useColors>, insets: { top: number; bottom: number }) {
-  const isWeb = Platform.OS === "web";
-  return StyleSheet.create({
-    root: { flex: 1 },
-    scroll: {
-      flexGrow: 1,
-      paddingTop: isWeb ? insets.top + 67 : insets.top + 16,
-      paddingBottom: isWeb ? 34 : insets.bottom + 24,
-      paddingHorizontal: 20,
-    },
-    header: { alignItems: "center", marginBottom: 28 },
-    logoContainer: {
-      width: 72,
-      height: 72,
-      borderRadius: 22,
-      backgroundColor: colors.primary,
-      alignItems: "center",
-      justifyContent: "center",
-      marginBottom: 14,
-      shadowColor: colors.primary,
-      shadowOffset: { width: 0, height: 8 },
-      shadowOpacity: 0.35,
-      shadowRadius: 16,
-      elevation: 8,
-    },
-    appName: {
-      fontSize: 28,
-      fontWeight: "700",
-      color: colors.foreground,
-      fontFamily: "Inter_700Bold",
-    },
-    tagline: {
-      fontSize: 14,
-      color: colors.mutedForeground,
-      marginTop: 4,
-      fontFamily: "Inter_400Regular",
-    },
-    card: {
-      backgroundColor: colors.card,
-      borderRadius: 24,
-      padding: 28,
-      shadowColor: "#000",
-      shadowOffset: { width: 0, height: 4 },
-      shadowOpacity: 0.08,
-      shadowRadius: 20,
-      elevation: 4,
-    },
-    title: {
-      fontSize: 22,
-      fontWeight: "700",
-      color: colors.foreground,
-      fontFamily: "Inter_700Bold",
-      marginBottom: 4,
-    },
-    subtitle: {
-      fontSize: 14,
-      color: colors.mutedForeground,
-      fontFamily: "Inter_400Regular",
-      marginBottom: 24,
-    },
-    inputGroup: { marginBottom: 16 },
-    label: {
-      fontSize: 13,
-      fontWeight: "600",
-      color: colors.foreground,
-      fontFamily: "Inter_600SemiBold",
-      marginBottom: 8,
-    },
-    inputWrapper: {
-      flexDirection: "row",
-      alignItems: "center",
-      backgroundColor: colors.muted,
-      borderRadius: 12,
-      borderWidth: 1.5,
-      borderColor: colors.border,
-      paddingHorizontal: 14,
-      height: 52,
-    },
-    inputIcon: { marginRight: 10 },
-    input: {
-      flex: 1,
-      fontSize: 15,
-      color: colors.foreground,
-      fontFamily: "Inter_400Regular",
-      height: "100%",
-    },
-    inputPaddingRight: { paddingRight: 8 },
-    eyeBtn: { padding: 4 },
-    errorBox: {
-      flexDirection: "row",
-      alignItems: "center",
-      gap: 6,
-      backgroundColor: colors.destructive + "15",
-      borderRadius: 10,
-      padding: 12,
-      marginBottom: 14,
-    },
-    errorText: {
-      color: colors.destructive,
-      fontSize: 13,
-      fontFamily: "Inter_400Regular",
-      flex: 1,
-    },
-    btn: {
-      backgroundColor: colors.primary,
-      borderRadius: 14,
-      height: 54,
-      alignItems: "center",
-      justifyContent: "center",
-      marginTop: 4,
-      shadowColor: colors.primary,
-      shadowOffset: { width: 0, height: 6 },
-      shadowOpacity: 0.3,
-      shadowRadius: 12,
-      elevation: 6,
-    },
-    btnDisabled: { opacity: 0.7 },
-    btnText: {
-      color: colors.primaryForeground,
-      fontSize: 16,
-      fontWeight: "700",
-      fontFamily: "Inter_700Bold",
-    },
-    divider: {
-      flexDirection: "row",
-      alignItems: "center",
-      marginVertical: 18,
-      gap: 10,
-    },
-    dividerLine: { flex: 1, height: 1, backgroundColor: colors.border },
-    dividerText: { color: colors.mutedForeground, fontSize: 13, fontFamily: "Inter_400Regular" },
-    secondaryBtn: {
-      borderWidth: 1.5,
-      borderColor: colors.primary,
-      borderRadius: 14,
-      height: 52,
-      alignItems: "center",
-      justifyContent: "center",
-    },
-    secondaryBtnText: {
-      color: colors.primary,
-      fontSize: 15,
-      fontWeight: "600",
-      fontFamily: "Inter_600SemiBold",
-    },
-  });
-}
+const styles = StyleSheet.create({
+  header: { alignItems: "center", marginBottom: 24 },
+  logoContainer: {
+    width: 72,
+    height: 72,
+    borderRadius: 22,
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 14,
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.35,
+    shadowRadius: 16,
+    elevation: 8,
+  },
+  appName: { fontSize: 28, fontWeight: "700", fontFamily: "Inter_700Bold" },
+  tagline: { fontSize: 14, marginTop: 4, fontFamily: "Inter_400Regular" },
+  card: {
+    borderRadius: 24,
+    padding: 28,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.08,
+    shadowRadius: 20,
+    elevation: 4,
+  },
+  title: { fontSize: 22, fontWeight: "700", fontFamily: "Inter_700Bold", marginBottom: 4 },
+  subtitle: { fontSize: 14, fontFamily: "Inter_400Regular", marginBottom: 20 },
+  inputGroup: { marginBottom: 16 },
+  label: { fontSize: 13, fontWeight: "600", fontFamily: "Inter_600SemiBold", marginBottom: 8 },
+  inputWrapper: {
+    flexDirection: "row",
+    alignItems: "center",
+    borderRadius: 12,
+    borderWidth: 1.5,
+    paddingHorizontal: 14,
+    height: 52,
+  },
+  inputIcon: { marginRight: 10 },
+  input: { flex: 1, fontSize: 15, fontFamily: "Inter_400Regular", height: "100%" },
+  eyeBtn: { padding: 4 },
+  errorBox: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    borderRadius: 10,
+    padding: 12,
+    marginBottom: 14,
+  },
+  errorText: { fontSize: 13, fontFamily: "Inter_400Regular", flex: 1 },
+  btn: {
+    borderRadius: 14,
+    height: 54,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 4,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.3,
+    shadowRadius: 12,
+    elevation: 6,
+  },
+  btnDisabled: { opacity: 0.7 },
+  btnText: { fontSize: 16, fontWeight: "700", fontFamily: "Inter_700Bold" },
+  divider: { flexDirection: "row", alignItems: "center", marginVertical: 18, gap: 10 },
+  dividerLine: { flex: 1, height: 1 },
+  dividerText: { fontSize: 13, fontFamily: "Inter_400Regular" },
+  secondaryBtn: {
+    borderWidth: 1.5,
+    borderRadius: 14,
+    height: 52,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  secondaryBtnText: { fontSize: 15, fontWeight: "600", fontFamily: "Inter_600SemiBold" },
+});
