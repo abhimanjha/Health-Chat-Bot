@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "HealthAI",
-    "slug": "health-ai",
+    "name": "mindcheck",
+    "slug": "mindcheck",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "health-ai",
+    "scheme": "mindcheck",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "splash": {
@@ -14,9 +14,12 @@
       "backgroundColor": "#0D9488"
     },
     "ios": {
-      "supportsTablet": false
+      "supportsTablet": false,
+      "bundleIdentifier": "com.mindcheck.app"
     },
-    "android": {},
+    "android": {
+      "package": "com.mindcheck.app"
+    },
     "web": {
       "favicon": "./assets/images/icon.png"
     },
