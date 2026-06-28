@@ -24,6 +24,10 @@ function NativeTabLayout() {
         <Icon sf={{ default: "person.circle", selected: "person.circle.fill" }} />
         <Label>Profile</Label>
       </NativeTabs.Trigger>
+      <NativeTabs.Trigger name="support">
+        <Icon sf={{ default: "lifepreserver", selected: "lifepreserver.fill" }} />
+        <Label>Support</Label>
+      </NativeTabs.Trigger>
     </NativeTabs>
   );
 }
@@ -65,6 +69,7 @@ function ClassicTabLayout() {
         },
       }}
     >
+      <Tabs.Screen name="index" options={{ href: null }} />
       <Tabs.Screen
         name="chat"
         options={{
@@ -98,6 +103,18 @@ function ClassicTabLayout() {
               <SymbolView name="person.circle" tintColor={color} size={24} />
             ) : (
               <Feather name="user" size={22} color={color} />
+            ),
+        }}
+      />
+      <Tabs.Screen
+        name="support"
+        options={{
+          title: "Support",
+          tabBarIcon: ({ color }) =>
+            isIOS ? (
+              <SymbolView name="lifepreserver" tintColor={color} size={24} />
+            ) : (
+              <Feather name="life-buoy" size={22} color={color} />
             ),
         }}
       />

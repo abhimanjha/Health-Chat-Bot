@@ -64,10 +64,10 @@ export default function ProfileScreen() {
     .slice(0, 2);
 
   const menuItems = [
-    { icon: "heart" as const, label: "Health Tips", desc: "Daily wellness recommendations", color: "#EF4444" },
-    { icon: "bell" as const, label: "Reminders", desc: "Set daily check-in reminders", color: "#F59E0B" },
-    { icon: "shield" as const, label: "Privacy", desc: "Your data stays on your device", color: "#6366F1" },
-    { icon: "info" as const, label: "About HealthAI", desc: "v1.0 · AI-powered wellness", color: "#0D9488" },
+    { icon: "heart" as const, label: "Health Tips", desc: "Daily wellness recommendations", color: "#EF4444", route: "/health-tips" as const },
+    { icon: "bell" as const, label: "Reminders", desc: "Set daily check-in reminders", color: "#F59E0B", route: "/reminders" as const },
+    { icon: "shield" as const, label: "Privacy", desc: "Your data stays on your device", color: "#6366F1", route: "/privacy" as const },
+    { icon: "info" as const, label: "About HealthAI", desc: "v1.0 · AI-powered wellness", color: "#0D9488", route: "/about" as const },
   ];
 
   return (
@@ -151,6 +151,7 @@ export default function ProfileScreen() {
         {menuItems.map((item, idx) => (
           <Pressable
             key={item.label}
+            onPress={() => router.push(item.route)}
             style={[styles.menuItem, idx < menuItems.length - 1 && styles.menuItemBorder]}
           >
             <View style={[styles.menuIcon, { backgroundColor: item.color + "18" }]}>
